@@ -9,16 +9,25 @@ int     run_builtins(char **args, char **envp)
         ft_printf("goodbye\n");
         return (0);
     }
-    return (1);
+    else if (ft_strcmp(args[0], "env") == 0)
+    {
+        while (*envp)
+            ft_printf("%s\n", *(envp++));
+        ft_printf("\n");
+        return (1);
+    }
+    return (2);
 }
 
 int        run_command(char **args, char **envp)
 {
     pid_t	pid;
 	int		status;
+    int     ret;
 
-    if (!run_builtins(args, envp))
-        return (0);
+    ret = 0;
+    if ((ret = run_builtins(args, envp)) != 2)
+        return (ret);
 	pid = fork();
 	if (pid == 0)
 	{
