@@ -1,112 +1,105 @@
 #include "../includes/minishell.h"
 
-int     run_builtins(char **args, char **envp)
+int     run_builtins(char **args, t_env *env)
 {
-    if (envp)
-        ;
     if (ft_strcmp(args[0], "exit") == 0)
-    {
-        ft_printf("goodbye\n");
-        return (0);
-    }
-    else if (ft_strcmp(args[0], "env") == 0)
-    {
-        while (*envp)
-            ft_printf("%s\n", *(envp++));
-        ft_printf("\n");
         return (1);
-    }
+    else if (ft_strcmp(args[0], "env") == 0)
+        return (ft_env(env->envp));
+    else if (ft_strcmp(args[0], "echo") == 0)
+        return (ft_echo(args));
+    else if (ft_strcmp(args[0], "pwd") == 0)
+        return (ft_pwd());
+    else if (ft_strcmp(args[0], "setenv") == 0)
+        return (ft_setenv(args[1] ? args[1] : 0, (args[2] ? args[2] : 0), env));
+    else if (ft_strcmp(args[0], "unsetenv") == 0)
+        return (ft_unsetenv(args[1], env));
+    else if (ft_strcmp(args[0], "cd") == 0)
+        return (ft_cd(args, env));
     return (2);
 }
 
-int        run_command(char **args, char **envp)
+int        run_command(char *name, char **args, char **envp)
 {
     pid_t	pid;
 	int		status;
-    int     ret;
 
-    ret = 0;
-    if ((ret = run_builtins(args, envp)) != 2)
-        return (ret);
 	pid = fork();
 	if (pid == 0)
 	{
-		if (execve(args[0], args, envp) == -1)
+		if (execve(name, args, envp) == -1)
 		{
-			ft_printf("permission denied\n");
+			ft_printf("command not found: %s\n", *args);
 		}
 		exit(EXIT_FAILURE);
 	}
 	else if (pid < 0)
 	{
-		ft_printf("msh: unable to fork process\n");
+		ft_printf("unable to fork process\n");
 		exit(EXIT_FAILURE);
 	}
 	wait(&status);
-    return (1);
+    return (status);
 }
 
-void        print_prompt(void)
+int         run_dispatch(char **args, t_env *env)
 {
-    char	buff[PATH_MAX + 1];
-    char	*cwd;
-    cwd = getcwd(buff, PATH_MAX + 1);
-    ft_printf("\033[37m%s \033[31m$>\033[37m", cwd);
-}
+    int     ret;
+    char    *name;
 
-char        **get_args(void)
-{
-    char    *line;
-    char    **array;
-    print_prompt();
-    if (!(get_next_line(0, &line)))
+    name = 0;
+    if (!(*args))
         return (0);
-    array = ft_strsplit(line, ' ');
-    free (line);
-    return (array);
+    if ((ret = run_builtins(args, env)) != 2)
+        return (ret);
+    ret = 0;
+    if (check_path(&name, args, env->envp))
+    {
+        ret = run_command(name, args, env->envp);
+        free(name);
+    }
+    else
+        ret = run_command(args[0], args, env->envp);
+    return (ret);
 }
 
-void        sh_loop(char **envp)
+int         check_return(char **args, int stat)
 {
-    int     stat;
-    char    **args;
-
-    stat = 1;
-    args = 0;
-    while (stat)
+    if (stat)
+        ;
+    if (args[0] && ft_strcmp(args[0], "exit") == 0)
     {
-        args = get_args();
-        stat = run_command(args, envp);
+        ft_printf("goodbye\n");
+        return (1);
+    }
+    return (0);
+}
+
+void        sh_loop(t_env *env)
+{
+    char    **args;
+    int     quit;
+
+    quit = 0;
+    args = 0;
+    while (!quit)
+    {
+        args = get_args(env->envp);
+        if (!args)
+            continue ;
+        quit = check_return(args, run_dispatch(args, env));
         ft_arraydel(args);
     }
-}
-char        **make_env(void)
-{
-    int     i;
-    extern char	**environ;
-    char    **ret;
-
-    i = 0;
-    while (environ[i])
-        i++;
-    if (!(ret = ft_memalloc(sizeof(char*) * (i + 1))))
-        return (0);
-    i = 0;
-    while (environ[i])
-    {
-        ret[i] = ft_strdup(environ[i]);
-        i++;
-    }
-    return (ret);
 }
 
 int        main(void)
 {
-    char    **env;
+    t_env   env;
 
-    if (!(env = make_env()))
+    ft_bzero(&env, sizeof(t_env));
+    if (!make_env(&env))
         return (1);
-    sh_loop(env);
-    ft_arraydel(env);
+    sh_loop(&env);
+    ft_arraydel(env.envp);
     return (0);
 }

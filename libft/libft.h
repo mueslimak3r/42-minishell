@@ -89,5 +89,7 @@ char				*ft_strcase(char *str, char format);
 char				*ft_itoa_base(long long value, int base);
 int					get_next_line(const int fd, char **line);
 void    			ft_arraydel(char **array);
+char				*ft_makepath(char *s1, char *s2, char c);
+char				*ft_strndup(const char *src, size_t len);
 
 #endif

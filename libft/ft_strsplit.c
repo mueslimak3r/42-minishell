@@ -23,7 +23,7 @@ char	**ft_strsplit(char const *s, char c)
 	i = -1;
 	if (!s)
 		return (NULL);
-	if (!(p = (char **)ft_memalloc(sizeof(char *) * (ft_cntwords(s, c)) + 1)))
+	if (!(p = (char **)ft_memalloc(sizeof(char *) * (ft_cntwords(s, c) + 1))))
 		return (NULL);
 	while (!(p[h] = NULL) && (++i) < (int)ft_strlen(s))
 	{

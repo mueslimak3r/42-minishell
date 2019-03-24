@@ -12,7 +12,7 @@
 
 NAME = minishell
 
-SRC = main.c
+SRC = main.c echo.c path.c arguments.c cd.c env.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -24,7 +24,7 @@ INC = -I includes
 
 CC = gcc
 
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 all: $(NAME)
 
 $(NAME): $(OBJ)
