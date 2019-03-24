@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   arguments.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/24 10:14:12 by calamber          #+#    #+#             */
+/*   Updated: 2019/03/24 10:26:24 by calamber         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
-static void	msh_count_quotes(char **line, int *words, char quote, int *ret)
+static void		msh_count_quotes(char **line, int *words, char quote, int *ret)
 {
 	*ret = 0;
 	(*line)++;
@@ -15,10 +27,10 @@ static void	msh_count_quotes(char **line, int *words, char quote, int *ret)
 		*ret = 1;
 }
 
-static int  count_words(char *line)
+static int		count_words(char *line)
 {
-    int	words;
-	int ret;
+	int			words;
+	int			ret;
 
 	words = 0;
 	while (*line)
@@ -43,9 +55,9 @@ static int  count_words(char *line)
 	return (words);
 }
 
-static char	*msh_handle_quotes(char *line, int *j, char quote)
+static char		*msh_handle_quotes(char *line, int *j, char quote)
 {
-	int size;
+	int			size;
 
 	size = 0;
 	(*j)++;
@@ -63,9 +75,9 @@ static char	*msh_handle_quotes(char *line, int *j, char quote)
 		return (ft_strdup(""));
 }
 
-static char	*msh_next_word(char *line, int *j)
+static char		*msh_next_word(char *line, int *j)
 {
-	int		size;
+	int			size;
 
 	while (line[*j])
 	{
@@ -91,12 +103,12 @@ static char	*msh_next_word(char *line, int *j)
 	return (NULL);
 }
 
-char        **arg_parser(char *line)
+char			**arg_parser(char *line)
 {
-    int		i;
-	int		j;
-	int		words;
-	char	**ret;
+	int			i;
+	int			j;
+	int			words;
+	char		**ret;
 
 	i = 0;
 	j = 0;
@@ -109,49 +121,49 @@ char        **arg_parser(char *line)
 	return (ret);
 }
 
-char        **expand_args(char **args, char **envp)
+char			**expand_args(char **args, char **envp)
 {
-    int     i;
-    char    *new;
-    char    *out;
+	int			i;
+	char		*new;
+	char		*out;
 
-    i = 0;
-    while (args[i])
-    {
-        if (args[i][0] == '$')
-        {
-            
-            if ((find_env(envp, args[i] + 1)) == -1 ||
-                !get_env(envp, args[i] + 1, &(new)))
-                return (0);
-            free(args[i]);
-            args[i] = new;
-        }
-        else if (args[i][0] == '~')
-        {
-            if ((find_env(envp, "HOME")) == -1 ||
-                !get_env(envp, "HOME", &new))
-                return (0);
-            out = ft_makepath(new, args[i] + 1, '/');
-            free(args[i]);
-            args[i] = out;
-        }
-        i++;
-    }
-    return (args);
+	i = 0;
+	while (args[i])
+	{
+		if (args[i][0] == '$')
+		{
+			if ((find_env(envp, args[i] + 1)) == -1 ||
+				!get_env(envp, args[i] + 1, &(new)))
+				return (0);
+			free(args[i]);
+			args[i] = new;
+		}
+		else if (args[i][0] == '~')
+		{
+			if ((find_env(envp, "HOME")) == -1 ||
+				!get_env(envp, "HOME", &new))
+				return (0);
+			out = ft_makepath(new, args[i] + 1, '/');
+			free(args[i]);
+			args[i] = out;
+		}
+		i++;
+	}
+	return (args);
 }
 
-char        **get_args(char **envp)
+char			**get_args(char **envp)
 {
-    char    *line;
-    char    **array;
-    if (envp)
-        ;
-    ft_printf("\033[31m$>\033[37m");
-    if (!(get_next_line(0, &line)))
-        return (0);
-    array = arg_parser(line);
-    free (line);
-    array = expand_args(array, envp);
-    return (array);
+	char		*line;
+	char		**array;
+
+	if (envp)
+		;
+	ft_printf("\033[31m$>\033[37m");
+	if (!(get_next_line(0, &line)))
+		return (0);
+	array = arg_parser(line);
+	free(line);
+	array = expand_args(array, envp);
+	return (array);
 }

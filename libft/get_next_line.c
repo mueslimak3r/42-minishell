@@ -6,7 +6,7 @@
 /*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/30 19:38:09 by calamber          #+#    #+#             */
-/*   Updated: 2018/07/24 16:57:14 by calamber         ###   ########.fr       */
+/*   Updated: 2019/03/24 10:20:15 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,8 @@ int				get_next_line(const int fd, char **line)
 				if (takefrombuffer(fd, n, files, line) == 1)
 					return (1);
 			}
-			if ((read_and_combine(fd, files) == 0) && (ft_strlen(files[fd]) > 0))
+			if ((read_and_combine(fd, files) == 0) &&
+					(ft_strlen(files[fd]) > 0))
 				return (takefrombuffer(fd, ft_strlen(files[fd]), files, line));
 		}
 	}

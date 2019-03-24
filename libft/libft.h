@@ -6,7 +6,7 @@
 /*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/21 16:24:04 by calamber          #+#    #+#             */
-/*   Updated: 2018/12/04 22:36:46 by calamber         ###   ########.fr       */
+/*   Updated: 2019/03/24 10:17:24 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int					ft_isupper(char c);
 char				*ft_strcase(char *str, char format);
 char				*ft_itoa_base(long long value, int base);
 int					get_next_line(const int fd, char **line);
-void    			ft_arraydel(char **array);
+void				ft_arraydel(char **array);
 char				*ft_makepath(char *s1, char *s2, char c);
 char				*ft_strndup(const char *src, size_t len);
 
