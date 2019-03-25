@@ -91,5 +91,6 @@ int					get_next_line(const int fd, char **line);
 void				ft_arraydel(char **array);
 char				*ft_makepath(char *s1, char *s2, char c);
 char				*ft_strndup(const char *src, size_t len);
+int					ft_returnfree(char **ptr, int ret);
 
 #endif

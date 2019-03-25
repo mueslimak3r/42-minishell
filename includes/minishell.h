@@ -38,5 +38,8 @@ char			**get_args(char **envp);
 int				check_path(char **name, char **args, char **envp);
 char			**arg_parser(char *line);
 int				find_env(char **envp, char *name);
+int				run_builtins(char **args, t_env *env);
+char			*sh_next_word(char *line, int *j);
+int				sh_count_words(char *line);
 
 #endif

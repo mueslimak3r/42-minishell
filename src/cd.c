@@ -29,18 +29,14 @@ int			changedir(char *name, char *cwd, t_env *env)
 	return (1);
 }
 
-int			ft_cd(char **args, t_env *env)
+int			do_cd(char *cwd, char **args, t_env *env)
 {
-	char	buff[PATH_MAX + 1];
-	char	*cwd;
 	char	*new;
 
 	new = 0;
-	cwd = getcwd(buff, PATH_MAX + 1);
 	if (!args[1])
 	{
-		if ((find_env(env->envp, "HOME")) == -1 ||
-				!get_env(env->envp, "HOME", &new))
+		if (!get_env(env->envp, "HOME", &new))
 			return (-1);
 		changedir(new, cwd, env);
 		free(new);
@@ -49,14 +45,22 @@ int			ft_cd(char **args, t_env *env)
 	{
 		if (ft_strcmp(args[1], "-") == 0)
 		{
-			if ((find_env(env->envp, "OLDPWD")) == -1 ||
-				!get_env(env->envp, "OLDPWD", &new))
+			if (!get_env(env->envp, "OLDPWD", &new))
 				return (-1);
 			changedir(new, cwd, env);
+			free(new);
 		}
 		else
 			changedir(args[1], cwd, env);
-		free(new);
 	}
 	return (0);
+}
+
+int			ft_cd(char **args, t_env *env)
+{
+	char	*cwd;
+	char	buff[PATH_MAX + 1];
+
+	cwd = getcwd(buff, PATH_MAX + 1);
+	return (do_cd(cwd, args, env));
 }

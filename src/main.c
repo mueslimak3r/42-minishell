@@ -12,25 +12,6 @@
 
 #include "../includes/minishell.h"
 
-int			run_builtins(char **args, t_env *env)
-{
-	if (ft_strcmp(args[0], "exit") == 0)
-		return (1);
-	else if (ft_strcmp(args[0], "env") == 0)
-		return (ft_env(env->envp));
-	else if (ft_strcmp(args[0], "echo") == 0)
-		return (ft_echo(args));
-	else if (ft_strcmp(args[0], "pwd") == 0)
-		return (ft_pwd());
-	else if (ft_strcmp(args[0], "setenv") == 0)
-		return (ft_setenv(args[1] ? args[1] : 0, (args[2] ? args[2] : 0), env));
-	else if (ft_strcmp(args[0], "unsetenv") == 0)
-		return (ft_unsetenv(args[1], env));
-	else if (ft_strcmp(args[0], "cd") == 0)
-		return (ft_cd(args, env));
-	return (2);
-}
-
 int			run_command(char *name, char **args, char **envp)
 {
 	pid_t	pid;
@@ -98,7 +79,10 @@ void		sh_loop(t_env *env)
 	{
 		args = get_args(env->envp);
 		if (!args)
+		{
+			ft_arraydel(args);
 			continue ;
+		}
 		quit = check_return(args, run_dispatch(args, env));
 		ft_arraydel(args);
 	}

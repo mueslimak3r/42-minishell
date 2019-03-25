@@ -31,15 +31,14 @@ int					check_dir(char *name, char *path)
 int					find_exec(char *arg, char *envp, char **result)
 {
 	char			*line;
-	char			*backup;
 	char			*path;
 	int				size;
 
-	line = ft_strjoin(envp, ":");
-	backup = line;
+	line = envp;
 	while (*line)
 	{
-		size = ((ft_strchr(line, ':') < line) ? 0 : (ft_strchr(line, ':') - line));
+		size = ((ft_strchr(line, ':') < line) ? 0 :
+			(ft_strchr(line, ':') - line));
 		if (size)
 		{
 			path = ft_strsub(line, 0, size);
@@ -47,16 +46,15 @@ int					find_exec(char *arg, char *envp, char **result)
 			if (check_dir(arg, path))
 			{
 				*result = ft_makepath(path, arg, '/');
-				free(path);
-				return (1);
+				free(envp);
+				return (ft_returnfree(&path, 1));
 			}
 			free(path);
 		}
 		else
 			break ;
 	}
-	free(backup);
-	return (0);
+	return (ft_returnfree(&envp, 0));
 }
 
 int					get_env(char **envp, char *name, char **env_var)
@@ -64,6 +62,8 @@ int					get_env(char **envp, char *name, char **env_var)
 	size_t			size;
 
 	if (!name || !envp)
+		return (0);
+	if ((find_env(envp, name)) == -1)
 		return (0);
 	size = ft_strlen(name);
 	while (*envp && ft_strncmp(*envp, name, size) != 0)
@@ -79,13 +79,12 @@ int					check_path(char **name, char **args, char **envp)
 	char			*env_var;
 
 	env_var = 0;
-	if ((find_env(envp, "PATH")) == -1)
-		return (0);
 	if (!get_env(envp, "PATH", &env_var))
 		return (0);
-	if (!(find_exec(*args, env_var, name)))
-		return (0);
-	return (1);
+	if (!(find_exec(*args, ft_strjoin(env_var, ":"), name)))
+		return (ft_returnfree(&env_var, 0));
+	
+	return (ft_returnfree(&env_var, 1));
 }
 
 int					make_env(t_env *env)
