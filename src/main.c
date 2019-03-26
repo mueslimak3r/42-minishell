@@ -21,14 +21,12 @@ int			run_command(char *name, char **args, char **envp)
 	if (pid == 0)
 	{
 		if (execve(name, args, envp) == -1)
-		{
-			ft_printf("command not found: %s\n", *args);
-		}
+			ft_putstr_fd("don't talk to me like that!\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	else if (pid < 0)
 	{
-		ft_printf("unable to fork process\n");
+		ft_putstr_fd("fork malfunction. Please use spoon\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	wait(&status);
@@ -62,7 +60,7 @@ int			check_return(char **args, int stat)
 		;
 	if (args[0] && ft_strcmp(args[0], "exit") == 0)
 	{
-		ft_printf("goodbye\n");
+		ft_printf("don't call me\n");
 		return (1);
 	}
 	return (0);

@@ -36,26 +36,25 @@ char			**expand_args(char **args, char **envp)
 	char		*new;
 	char		*out;
 
-	i = 0;
-	while (args[i])
+	i = -1;
+	while (args[++i])
 	{
 		if (args[i][0] == '$')
 		{
 			if (!get_env(envp, args[i] + 1, &new))
-				return (0);
+				continue ;
 			free(args[i]);
 			args[i] = new;
 		}
 		else if (args[i][0] == '~')
 		{
 			if (!get_env(envp, "HOME", &new))
-				return (0);
+				continue ;
 			out = ft_makepath(new, args[i] + 1, '/');
 			free(args[i]);
 			free(new);
 			args[i] = out;
 		}
-		i++;
 	}
 	return (args);
 }
@@ -68,10 +67,10 @@ char			**get_args(char **envp)
 	if (envp)
 		;
 	ft_printf("\033[31m$>\033[37m");
-	if (!(get_next_line(0, &line)))
+	if (!(line = ft_readstdin_line()))
 		return (0);
 	array = arg_parser(line);
-	free(line);
+	ft_strdel(&line);
 	array = expand_args(array, envp);
 	return (array);
 }

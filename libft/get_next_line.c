@@ -52,13 +52,10 @@ int				takefrombuffer(const int fd, int n, char **files, char **line)
 
 	if (n >= 0)
 	{
-		*line = (char*)ft_memalloc(sizeof(char) * (n + 1));
-		*line = ft_strncpy(*line, files[fd], n);
+		*line = ft_strndup(files[fd], n);
 		swap2 = ft_strsub(files[fd], n + 1, (ft_strlen(files[fd]) - n));
 		free(files[fd]);
-		files[fd] = ft_memalloc(ft_strlen(swap2) + 1);
-		files[fd] = ft_strcpy(files[fd], swap2);
-		free(swap2);
+		files[fd] = swap2;
 		return (1);
 	}
 	return (0);

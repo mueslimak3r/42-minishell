@@ -1,31 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strsub.c                                        :+:      :+:    :+:   */
+/*   ft_readstdin_line.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/05/04 00:19:01 by calamber          #+#    #+#             */
-/*   Updated: 2018/05/04 00:20:20 by calamber         ###   ########.fr       */
+/*   Created: 2019/03/26 02:41:12 by calamber          #+#    #+#             */
+/*   Updated: 2019/03/26 02:42:14 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strsub(char const *s, unsigned int start, size_t len)
+char		*ft_readstdin_line(void)
 {
-	char*str;
+	char	buf[BUFF_SIZE + 1];
+	char	*tmp;
+	char	*s;
+	int		ret;
 
-	if (!s)
-		return (NULL);
-	if (!(str = ft_memalloc(sizeof(char) * (len + 1))))
-		return (0);
-	while (start--)
+	s = 0;
+	while ((ret = read(0, buf, BUFF_SIZE)) > 0)
 	{
-		s++;
-		if (!(*s))
-			return (0);
+		buf[ret] = '\0';
+		tmp = s ? ft_strjoin(s, buf) : ft_strdup(buf);
+		free(s);
+		s = tmp;
+		if (ft_strchr(s, '\n'))
+		{
+			tmp = ft_strndup(s, (ft_strchr(s, '\n') - s));
+			free(s);
+			return (tmp);
+		}
 	}
-	ft_strncpy(str, s, len);
-	return (str);
+	return (0);
 }

@@ -22,7 +22,11 @@ int			changedir(char *name, char *cwd, t_env *env)
 	ft_unsetenv("PWD", env);
 	ft_unsetenv("OLDPWD", env);
 	if (chdir(name) != 0)
+	{
+		ft_putstr_fd(name, 2);
+		ft_putstr_fd(" was killed long ago, before your time.\n", 2);
 		return (0);
+	}
 	new = getcwd(buff, PATH_MAX + 1);
 	if (!(ft_setenv("PWD", new, env) || ft_setenv("OLDPWD", cwd, env)))
 		return (0);

@@ -41,6 +41,7 @@ int			ft_pwd(void)
 	char	buff[PATH_MAX + 1];
 	char	*cwd;
 
+	cwd = 0;
 	cwd = getcwd(buff, PATH_MAX + 1);
 	ft_printf("%s\n", cwd);
 	return (0);

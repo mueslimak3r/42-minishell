@@ -6,7 +6,7 @@
 /*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/24 09:56:23 by calamber          #+#    #+#             */
-/*   Updated: 2019/03/24 10:07:03 by calamber         ###   ########.fr       */
+/*   Updated: 2019/03/26 02:40:56 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,12 @@ int					check_dir(char *name, char *path)
 	while ((pdirent = readdir(pdir)) != 0)
 	{
 		if (ft_strcmp(pdirent->d_name, name) == 0)
+		{
+			closedir(pdir);
 			return (1);
+		}
 	}
+	closedir(pdir);
 	return (0);
 }
 
@@ -83,7 +87,6 @@ int					check_path(char **name, char **args, char **envp)
 		return (0);
 	if (!(find_exec(*args, ft_strjoin(env_var, ":"), name)))
 		return (ft_returnfree(&env_var, 0));
-	
 	return (ft_returnfree(&env_var, 1));
 }
 
