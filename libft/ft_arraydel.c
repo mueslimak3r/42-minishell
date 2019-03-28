@@ -14,9 +14,14 @@
 
 void	ft_arraydel(char **array)
 {
+	char	**temp;
+
+	temp = array;
 	while (*array)
 	{
-		ft_strdel(array);
+		ft_strdel(&(*array));
 		array++;
 	}
+	if (temp)
+		free(temp);
 }

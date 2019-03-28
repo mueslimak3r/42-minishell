@@ -77,10 +77,7 @@ void		sh_loop(t_env *env)
 	{
 		args = get_args(env->envp);
 		if (!args)
-		{
-			ft_arraydel(args);
 			continue ;
-		}
 		quit = check_return(args, run_dispatch(args, env));
 		ft_arraydel(args);
 	}

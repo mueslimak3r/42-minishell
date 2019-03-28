@@ -12,11 +12,10 @@
 
 #include "../includes/minishell.h"
 
-static void		count_quotes(char **line, int *words, char quote, int *ret)
+static void		count_quotes(char **line, int *words, char quotet, int *ret)
 {
-	*ret = 0;
 	(*line)++;
-	while ((**line) != quote && (**line))
+	while ((**line) != quotet && (**line))
 		(*line)++;
 	if (**line)
 	{
@@ -33,6 +32,7 @@ int				sh_count_words(char *line)
 	int			ret;
 
 	words = 0;
+	ret = 0;
 	while (*line)
 	{
 		while (*line && *line <= 32)
@@ -40,7 +40,7 @@ int				sh_count_words(char *line)
 		if ((*line == '\"' && *(line + 1) != '\"') ||
 			(*line == '\'' && *(line + 1) != '\''))
 		{
-			count_quotes(&line, &words, *line, &ret);
+			count_quotes((&line), &words, *line, &ret);
 			if (ret == 1)
 				return (words);
 		}
@@ -79,25 +79,26 @@ char			*sh_next_word(char *line, int *j)
 {
 	int			size;
 
-	while (line[*j])
+	while (*(line + *j))
 	{
-		while (line[*j] && line[*j] <= 32)
+		while (*(line + *j) && *(line + *j) <= 32)
 			(*j)++;
-		if ((line[*j] == '\'' && line[*j + 1] != '\'') ||
-			(line[*j] == '\"' && line[*j + 1] != '\"'))
+		if ((*(line + *j) == '\"' && *(line + *j + 1) != '\"') ||
+			(*(line + *j) == '\'' && *(line + *j + 1) != '\''))
 			return (handle_quotes(line, j, line[*j]));
-		if (line[*j] > 32 && line[*j] != '\"' && line[*j] != '\'')
+		if (*(line + *j) > 32 && *(line + *j) != '\"' && *(line + *j) != '\'')
 		{
 			size = 0;
-			while (line[*j + size] > 32 && line[*j + size] != '\"'
-				&& line[*j + size] != '\'')
+			while (*(line + *j + size) > 32 && *(line + *j + size) != '\"'
+				&& *(line + *j + size) != '\'')
 				size++;
-			while (line[*j] > 32 && line[*j] != '\"' && line[*j] != '\'')
+			while (*(line + *j) > 32 && *(line + *j) != '\"' &&
+				*(line + *j) != '\'')
 				(*j)++;
 			return (ft_strndup(line + *j - size, size));
 		}
-		if ((line[*j] == '\'' && line[*j + 1] == '\'') ||
-			(line[*j] == '\"' && line[*j + 1] == '\"'))
+		if ((*(line + *j) == '\"' && *(line + *j + 1) == '\"') ||
+			(*(line + *j) == '\'' && *(line + *j + 1) == '\''))
 			*j += 2;
 	}
 	return (0);

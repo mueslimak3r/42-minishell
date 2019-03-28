@@ -24,7 +24,7 @@ INC = -I includes
 
 CC = gcc
 
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJ)
